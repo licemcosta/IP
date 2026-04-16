@@ -57,3 +57,98 @@ for item in lista_coleta: #pontuação
 print("Marty McFly: Nossa coleta termina aqui.")
 
 #FASE 2
+print("")
+print("FASE 2:")
+print("Doc Brown: De onde estão vindo esses sinais de rádio-frequência dimensional? Eles formam uma matriz perfeita!")
+matriz = [][]
+quantidade_linhas = int(input())
+quantidade_colunas = int(input())
+
+percurso = [][]
+linha = []
+for i in range(quantidade_colunas):
+    linha.append(".")
+for i in range(quantidade_linhas):
+    percurso.append(linha)
+
+for i in range(quantidade_linhas):
+    linha = input().split(" - ")
+    matriz.append(linha)
+
+linha_atual = 0
+coluna_atual = 0
+maior_valor = 0
+maior_linha = 0
+maior_coluna = 0
+distancia_percorrida = 0
+posicao = " "
+progresso = True
+
+while progresso:
+
+    if 0 <= linha_atual-1 < quantidade_linhas and 0 <= coluna_atual < quantidade_colunas: #Verificar o de cima
+        valor = [linha_atual-1][coluna_atual]
+        if valor > maior_valor:
+            maior_valor = valor
+            maior_linha = linha_atual - 1
+            maior_coluna = coluna_atual
+            posicao = "^"
+        
+
+    if 0 <= linha_atual < quantidade_linhas and 0 <= coluna_atual+1 < quantidade_colunas: #Verificar o da direita
+        valor = [linha_atual][coluna_atual+1]
+        if valor > maior_valor:
+            maior_valor = valor
+            maior_linha = linha_atual
+            maior_coluna = coluna_atual + 1
+            posicao = ">"
+
+    if 0 <= linha_atual+1 < quantidade_linhas and 0 <= coluna_atual < quantidade_colunas: #Verificar o de baixo
+        valor = [linha_atual+1][coluna_atual]
+        if valor > maior_valor:
+            maior_valor = valor
+            maior_linha = linha_atual + 1
+            maior_coluna = coluna_atual
+            posicao = "v"
+
+    if 0 <= linha_atual < quantidade_linhas and 0 <= coluna_atual-1 < quantidade_colunas: #Verificar o da esquerda
+        valor = [linha_atual][coluna_atual+1]
+        if valor > maior_valor:
+            maior_valor = valor
+            maior_linha = linha_atual 
+            maior_coluna = coluna_atual - 1
+            posicao = "<"
+
+    if maior_valor > matriz[linha_atual][coluna_atual]:
+        percurso[linha_atual][coluna_atual] = posicao
+        distancia_percorrida += 1
+        linha_atual = maior_linha
+        coluna_atual = maior_coluna
+
+    else:
+        percurso[linha_atual][coluna_atual] = "X"
+        progresso = False
+
+print(percurso)
+print(f"Doc Brown: Os sinais vêm da posição [{linha_atual}][{coluna_atual}]!")
+print(f"Localização triangulada com sucesso após {distancia_percorrida} movimentos pela grade dimensional.")
+
+    
+
+#FASE 3
+print("")
+print("FASE 3:")
+print("Doc Brown: Está quase tudo pronto para voltarmos para casa!")
+string_binaria = str(input())
+numero_inicial = int(string_binaria, 2)
+quant_trocas = 0
+for i in range(numero_inicial, 88):
+    numero_seguinte = format(numero_inicial + 1, "7b")
+    k = 0
+    for j in string_binaria:
+        numero_seguinte = list(numero_seguinte)
+        if j != numero_seguinte[k]:
+            quant_trocas += 1
+        k += 1   
+    numero_inicial += 1
+            
