@@ -1,0 +1,9 @@
+def distancia(X1, Y1, X2, Y2):
+    d1 = X1 - X2
+    d2 = Y1 - Y2
+    distancia_pontos = (d1**2 + d2**2)**0.5
+    return distancia_pontos
+
+pontos = [float(x) for x in input().split(" ")]
+dist = distancia(pontos[0], pontos[1], pontos[2], pontos[3])
+print(f"{dist:.2f}")
