@@ -1,7 +1,6 @@
-lista_chefe = [140]
-lista_hornet = [5, 0, 0, 0, 0, 0]
-def chefe(acao_chefe, lista_hornet):
-    lista_hornet = [5, 0, 0, 0, 0, 0] #máscaras totais, mascaras perdidas, mascaras recuperadas, sedas atuais, sedas geradas, sedas perdidas 
+lista_chefe = [140] #vida do chefe
+lista_hornet = [5, 0, 0, 0, 0, 0] #máscaras totais, mascaras perdidas, mascaras recuperadas, sedas atuais, sedas geradas, sedas perdidas 
+def chefe(acao_chefe):
     if acao_chefe == "Acerto":
         lista_hornet[0] -= 1 #máscaras totais
         lista_hornet[1] += 1 #máscaras perdidas
@@ -9,8 +8,7 @@ def chefe(acao_chefe, lista_hornet):
         lista_hornet[0] -= 2 #máscaras totais
         lista_hornet[1] += 2 #máscaras perdidas
     
-def hornet(acao_hornet, lista_hornet, lista_chefe):
-    lista_chefe = [140] #vida do chefe
+def hornet(acao_hornet):
     if acao_hornet == "Ferrão":
         lista_chefe[0] -= 10 #dano
         lista_hornet[3] += 2 #sedas atuais
@@ -39,12 +37,12 @@ else:
     print(f"Hornet: {nome_chefe}, levante sua lâmina!")
 print("")
     
-def combate(combate_acontecendo, lista_chefe, lista_hornet):
+def combate(combate_acontecendo):
     acao_hornet = input()
-    hornet(acao_hornet, lista_hornet, lista_chefe)
+    hornet(acao_hornet)
     if lista_chefe[0] > 0:
         acao_chefe = input()
-        chefe(acao_chefe, lista_hornet)
+        chefe(acao_chefe)
         if lista_hornet[0] <= 0:
             combate_acontecendo = False
     else:
@@ -53,7 +51,7 @@ def combate(combate_acontecendo, lista_chefe, lista_hornet):
 
 combate_acontecendo = True
 while combate_acontecendo:
-    combate(combate_acontecendo, lista_chefe, lista_hornet)
+    combate(combate_acontecendo)
 
 if lista_chefe[0] == 0:
     print("RESULTADOS DA BATALHA")
