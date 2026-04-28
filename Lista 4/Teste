@@ -1,9 +1,24 @@
-def distancia(X1, Y1, X2, Y2):
-    d1 = X1 - X2
-    d2 = Y1 - Y2
-    distancia_pontos = (d1**2 + d2**2)**0.5
-    return distancia_pontos
+matriz_a = []
+matriz_b = []
+matriz_nova = []
 
-pontos = [float(x) for x in input().split(" ")]
-dist = distancia(pontos[0], pontos[1], pontos[2], pontos[3])
-print(f"{dist:.2f}")
+for i in range(3): #gerando matriz nova só com zeros
+    linha = []
+    for j in range(3):
+        linha.append(0)
+    matriz_nova.append(linha)
+
+for i in range(3):
+    linha = input().split()
+    matriz_a.append(linha)
+for i in range(3):
+    linha = input().split()
+    matriz_b.append(linha)
+for i in range(3): #linha matriz a
+    for j in range(3): #coluna de a // linha de b
+        for k in range(3): #coluna de b
+            termo = int(matriz_a[i][j]) * int(matriz_b[j][k])
+            matriz_nova[i][k] += termo
+print(matriz_nova)
+
+energia_resultante = matriz_nova[0][0] + matriz_nova[1][1] + matriz_nova[2][2]
