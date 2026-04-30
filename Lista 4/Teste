@@ -1,24 +1,18 @@
-matriz_a = []
-matriz_b = []
-matriz_nova = []
+alfabeto = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
-for i in range(3): #gerando matriz nova só com zeros
-    linha = []
-    for j in range(3):
-        linha.append(0)
-    matriz_nova.append(linha)
+def descriptografar():
+    for termo in palavra_criptografada:
+        indice = 0
+        for letra in alfabeto:
+            if termo == letra:
+                palavra_descriptografada.append(alfabeto[indice-numero_andadas])
+            else:
+                indice += 1
 
-for i in range(3):
-    linha = input().split()
-    matriz_a.append(linha)
-for i in range(3):
-    linha = input().split()
-    matriz_b.append(linha)
-for i in range(3): #linha matriz a
-    for j in range(3): #coluna de a // linha de b
-        for k in range(3): #coluna de b
-            termo = int(matriz_a[i][j]) * int(matriz_b[j][k])
-            matriz_nova[i][k] += termo
-print(matriz_nova)
+palavra_criptografada = input()
+numero_andadas = int(input())
+palavra_descriptografada = []
+descriptografar()
+print("".join(palavra_descriptografada))
 
-energia_resultante = matriz_nova[0][0] + matriz_nova[1][1] + matriz_nova[2][2]
+descriptografar()

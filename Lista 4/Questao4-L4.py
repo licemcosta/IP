@@ -1,73 +1,104 @@
-quant_dias = int(input())
-
-def malkuth():
-    nomes = input().split()
-    quant_nomes = len(nomes)
-    quant_bubble = 0
-    while quant_bubble < quant_nomes: #algoritmo do bubble sort
-        quant_bubble += 1
-        for i in range(quant_nomes):
-            if i > 0:
-                if len(nomes[i]) < len(nomes[i-1]):
-                    nomes[i], nomes[i-1] = nomes[i-1], nomes[i]
-    energia_coletada = (len(nomes[0]) + len(nomes[-1]))*20
-    return energia_coletada #retorna o valor da energia pra somar depois
-
-def yesod():
-    sequencia = input()
-    ultimo = 0
-    quantidade = 0
-    sequencia_resumida = []
-    continuidade = True
-    for atual in range(len(sequencia)):
-        if continuidade: #verifica se o & já foi ou não
-            if sequencia[atual] != "&":
-                if sequencia[ultimo] != sequencia[atual]:
-                    sequencia_resumida.append(str(quantidade))
-                    sequencia_resumida.append(sequencia[ultimo])
-                    quantidade = 1
-                    ultimo = atual
-                else:
-                    quantidade += 1
-                    ultimo = atual
+def compra_de_plantas():
+    print("O quintal está sendo invadido! Prepare a melhor linha de defesa possível!")
+    posicao = 0
+    quantidade_sois = int(input())
+    nome_planta = ""
+    compra = False
+    while nome_planta != "FIM": #fazendo a compra das plantas
+        nome_planta = input()
+        if nome_planta == "Disparervilha":
+            if quantidade_sois >= 50:
+                quantidade_sois -= 50
+                quantidade_plantas[0] += 1
+                compra = True
             else:
-                continuidade = False
-    sequencia_resumida.append(str(quantidade))
-    sequencia_resumida.append(sequencia[ultimo])
-    resultado = ''.join(sequencia_resumida)
-    print(resultado)
-    if continuidade == True: #ajustar essa parte mas botei pra não esquecer :)
-        dia_sucesso = True
-    else:
-        dia_sucesso = False
+                print("Você não tem sóis suficientes para isso!")
+                compra = False
+        elif nome_planta == "Noz-Obstáculo":
+            if quantidade_sois >= 75:
+                quantidade_sois -= 75
+                quantidade_plantas[1] += 1
+                compra = True
+            else:
+                print("Você não tem sóis suficientes para isso!")
+                compra = False
+        elif nome_planta == "Gelervilha":
+            if quantidade_sois >= 100:
+                quantidade_sois -= 100
+                quantidade_plantas[2] += 1
+                compra = True
+            else:
+                print("Você não tem sóis suficientes para isso!")
+                compra = False
+        if compra == True and nome_planta != "FIM":
+            linha_de_combate[posicao] = nome_planta
+        posicao += 1
 
+def batalha():  
+    tipo_zumbi = input()
+    vida = 10
+    velocidade = 2
+    vida_noz = 2
+    passagem = False
+    if tipo_zumbi == "Zumbi Cabeça-de-Cone":
+        vida = 14
+    print("Lá vem o zumbi... espero que suas plantas estejam preparadas!")
+    combate_acontecendo = True
+    posicao = 0
+    linha_de_combate.reverse() #inverte a linha de combate, logo, o zumbi vai percorrer da direita pra esquerda, já que as plantas tão da direita pra esquerda
+    while combate_acontecendo == True and posicao < 18:
+        parada = True
+        for i in range(velocidade): #verificador de quantas casas ele avança
+            if parada == True and posicao < 18:
+                    if linha_de_combate[posicao] != "":
+                        parada = False
+                    else:
+                        posicao += 1
+        if posicao < 18:
+            vida -= quantidade_plantas[0] + quantidade_plantas[2]
+            velocidade -= quantidade_plantas[2]
+            if velocidade < 1:
+                velocidade = 1
+            if tipo_zumbi == "Zumbi do Jornal":
+                if vida <= 5 and passagem == False:
+                    passagem = True
+                    velocidade = 3
+                if quantidade_plantas[1] > 0 and passagem == True:
+                        velocidade = 2
+            if vida <= 0:
+                print("Bom trabalho! Dave Doidão nunca esteve tão feliz...")
+                combate_acontecendo = False
+            else:
+                if linha_de_combate[posicao] == "Noz-Obstáculo":
+                    if tipo_zumbi == "Zumbi Saltador":
+                        posicao += 1
+                    if tipo_zumbi != "Zumbi Saltador":
+                        if vida_noz == 2:
+                            vida_noz = 1
+                        elif vida_noz == 1:
+                            vida_noz = 2
+                            linha_de_combate[posicao] = ""
+                            posicao += 1
+                            quantidade_plantas[1] -= 1
+                            print("NOMNOMNOM!")
+                elif linha_de_combate[posicao] == "Disparervilha":
+                    linha_de_combate[posicao] = ""
+                    quantidade_plantas[0] -= 1
+                    posicao += 1
+                    print("NOMNOMNOM!")
+                elif linha_de_combate[posicao] == "Gelervilha":
+                    linha_de_combate[posicao] = ""
+                    quantidade_plantas[2] -= 1
+                    posicao += 1
+                    print("NOMNOMNOM!")
+    if combate_acontecendo == True:
+        print("O zumbi chegou à porta! Você perdeu!")
+  
+linha_de_combate = []
+quantidade_plantas = [0, 0, 0] #disparervilha, noz-obstáculo, gelervilha
 
+for i in range(18):
+    linha_de_combate.append("")
 
-def binah():
-    matriz_a = []
-    matriz_b = []
-    matriz_nova = []
-    for i in range(3): #gerando matriz nova só com zeros
-        linha = []
-        for j in range(3):
-            linha.append(0)
-        matriz_nova.append(linha)
-    for i in range(3):
-        linha = input().split()
-        matriz_a.append(linha)
-    for i in range(3):
-        linha = input().split()
-        matriz_b.append(linha)
-    for i in range(3): #linha matriz a
-        for j in range(3): #coluna de a // linha de b
-            for k in range(3): #coluna de b
-                termo = int(matriz_a[i][j]) * int(matriz_b[j][k])
-                matriz_nova[i][k] += termo
-    print(matriz_nova)
-    energia_resultante = matriz_nova[0][0] + matriz_nova[1][1] + matriz_nova[2][2]
-    return energia_resultante
-    
-
-def dias():
-    for i in range(quant_dias):
-        sefirot = input()
+compra_de_plantas()
+batalha()
