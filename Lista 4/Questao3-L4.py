@@ -1,3 +1,5 @@
+energia_necessaria = [100]
+
 def malkuth(nomes):
     quant_nomes = len(nomes)
     quant_bubble = 0
@@ -8,8 +10,10 @@ def malkuth(nomes):
                 if len(nomes[i]) < len(nomes[i-1]):
                     nomes[i], nomes[i-1] = nomes[i-1], nomes[i]
     energia_coletada = (len(nomes[0]) + len(nomes[-1]))*20
-    print(f"Energia Coletada: {energia_coletada} / {energia_necessaria}")
-    if energia_coletada >= energia_necessaria:
+    print(" ".join(nomes))
+
+    print(f"Energia Coletada: {energia_coletada} / {energia_necessaria[0]}")
+    if energia_coletada >= energia_necessaria[0]:
         print("Malkuth: O treino vespertino de hoje foi um sucesso! Estarei esperando vocês no período noturno, pessoal!")
         print()
         sucesso = True
@@ -26,19 +30,24 @@ def yesod():
     sequencia_resumida = []
     continuidade = True
     for atual in range(len(sequencia)):
-        if continuidade: #verifica se o & já foi ou não
-            if sequencia[atual] != "&":
-                if sequencia[ultimo] != sequencia[atual]:
-                    sequencia_resumida.append(str(quantidade))
-                    sequencia_resumida.append(sequencia[ultimo])
-                    quantidade = 1
-                    ultimo = atual
+        if sequencia != "&":
+            if continuidade: #verifica se o & já foi ou não
+                if sequencia[atual] != "&":
+                    if sequencia[ultimo] != sequencia[atual]:
+                        if quantidade > 1:
+                            sequencia_resumida.append(str(quantidade))
+                        sequencia_resumida.append(sequencia[ultimo])
+                        quantidade = 1
+                        ultimo = atual
+                    else:
+                        quantidade += 1
+                        ultimo = atual
                 else:
-                    quantidade += 1
-                    ultimo = atual
-            else:
-                continuidade = False
-    sequencia_resumida.append(str(quantidade))
+                    continuidade = False
+        else: 
+              continuidade = False
+    if quantidade > 1:
+        sequencia_resumida.append(str(quantidade))
     sequencia_resumida.append(sequencia[ultimo])
     resultado = ''.join(sequencia_resumida)
     if continuidade == True:
@@ -47,6 +56,11 @@ def yesod():
         sucesso = True
     else:
         print("Yesod: Os caracteres de hoje estavam corrompidas... devemos encerrar o dia mais cedo e investigar.")
+        if sequencia[0] != "&":
+            print(f"Yesod: Pelo menos, essas informações ainda estão conosco: '{resultado}'")
+        else:
+            resultado = ""
+            print(f"Yesod: Pelo menos, essas informações ainda estão conosco: '{resultado}'")
         print()
         sucesso = False
     return sucesso
@@ -74,25 +88,25 @@ def binah():
                 termo = int(matriz_a[i][j]) * int(matriz_b[j][k])
                 matriz_nova[i][k] += termo
     energia_resultante = matriz_nova[0][0] + matriz_nova[1][1] + matriz_nova[2][2]
-    print(matriz_nova)
+    for linha in matriz_nova:
+        print(linha)
     print()
-    print(f"Energia Coletada: {energia_resultante} / {energia_necessaria}")
-    if energia_resultante >= energia_necessaria:
+    print(f"Energia Coletada: {energia_resultante} / {energia_necessaria[0]}")
+    if energia_resultante >= energia_necessaria[0]:
         print("Binah: O expediente foi concluído. Não cometa os mesmos erros amanhã.")
-        print("Binah: É realmente uma sensação única te ver falhando...")
         print()
         sucesso = True
     else:
         print("Binah: É realmente uma sensação única te ver falhando...")
         print()
+        sucesso = False
     return sucesso
 
 
-def dias():
-    energia_necessaria = 60
+def dias(energia_necessaria):
+    sucessos = []
     for dia in range(quant_dias):
-        energia_necessaria += 40
-        print(f"Angela: Hoje é o dia {dia} de {quant_dias}. Espero mais um expediente concluído com excelência.")
+        print(f"Angela: Hoje é o dia {dia+1} de {quant_dias}. Espero mais um expediente concluído com excelência.")
         sefirot = input()
         if sefirot == "Malkuth":
             print("Hoje é o dia da Malkuth!")
@@ -106,7 +120,6 @@ def dias():
                 sucesso = False
             else:
                 sucesso = malkuth(nomes)
-
         elif sefirot == "Yesod":
             print("Hoje é dia do Yesod!")
             print("Yesod: Você é a cabeça dessa corporação, você deve agir como um exemplo para os outros e fazer certeza que esse dia passe coordialmente seguindo as regras.")
@@ -122,13 +135,18 @@ def dias():
         else:
             print("Angela: Essa sefirot não está disponível hoje.")
             print()
-        print("Angela: O relatório dessa semana está pronto.")
-        if sucesso == True:
-            print(f"Dia {dia} | Status: Energia necessária adquirida.")
+        sucessos.append(sucesso)
+        energia_necessaria[0] += 40
+
+
+    print("Angela: O relatório dessa semana está pronto.")
+    for dia in range(quant_dias):
+        if sucessos[dia] == True:
+            print(f"Dia {dia+1} | Status: Energia necessária adquirida.")
         else:
-            print(f"Dia {dia} | Status: Energia necessária não adquirida.")
+            print(f"Dia {dia+1} | Status: Energia necessária não adquirida.")
     
 quant_dias = int(input())
 print("Hoje é o dia da Lobotomy CinCorporation!")
 print()
-dias()
+dias(energia_necessaria)
