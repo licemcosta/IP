@@ -2,38 +2,60 @@ def calcular_geradores(tempo): #calcular a quantidade de geradores
     quant_geradores = tempo // 100
     return quant_geradores
 
-def nova_posicao(movimento, quem_anda): #determina a nova posição da pessoa
+def nova_posicao(movimento): #determina a nova posição da pessoa
     if movimento == "c" or movimento == "d1" or movimento == "d2":
-        posicoes_sobreviventes[quem_anda][1] -= 1
+        posicao_sobreviventes[1] -= 1
     elif movimento == "b" or movimento == "d3" or movimento == "d4":
-        posicoes_sobreviventes[quem_anda][1] += 1
+        posicao_sobreviventes[1] += 1
     if movimento == "e" or movimento == "d1" or movimento == "d3":
-        posicoes_sobreviventes[quem_anda][0] -= 1
+        posicao_sobreviventes[0] -= 1
     elif movimento == "d" or movimento == "d2" or movimento == "d4":
-        posicoes_sobreviventes[quem_anda][0] += 1
-    return (0 <= posicoes_sobreviventes[quem_anda][0] < 9 and 0 <= posicoes_sobreviventes[quem_anda][1] < 9)
+        posicao_sobreviventes[0] += 1
+    return (0 <= posicao_sobreviventes[0] < 9 and 0 <= posicao_sobreviventes[1] < 9)
 
-def estruturas(tempo): #avalia as estruturas percorridas e atualiza o tempo
-    linha = posicoes_sobreviventes[quem_anda][0]
-    coluna  = posicoes_sobreviventes[quem_anda][1]
+def estruturas(): #avalia as estruturas percorridas e atualiza o tempo
+    linha = posicao_sobreviventes[0]
+    coluna  = posicao_sobreviventes[1]
     if matriz[linha][coluna] == "M":
-        tempo += 5
+        tempo_ganho += 5
         print("🌿 Correu pelo mapa.")
     elif matriz[linha][coluna] == "S":
-        tempo += 40
+        tempo_ganho += 40
         print("🏃 Usou a Shack!")
         matriz[linha][coluna] = "M"
     elif matriz[linha][coluna] == "J":
-        tempo += 25
+        tempo_ganho += 25
         print("🏃 Usou a Jungle!")
         matriz[linha][coluna] = "M"
     elif matriz[linha][coluna] == "LT":
-        tempo += 20
+        tempo_ganho += 20
         print("🏃 Usou a LT!")
-    return tempo
+    return tempo_ganho
 
 
-def percurso():
+def percurso(tempo, ganchos): #faz o percurso (botar todas as funções aqui dentro)
+    quant_geradores = calcular_geradores(tempo)
+    print(f"--- STATUS: {quant_geradores}/5 Geradores | {ganchos}/12 Ganchos ---")
+    if vantagem_adicionada == False: #tempo da vantagem
+        adicao_tempo += (60 + distancia * 10)
+        vantagem_adicionada = True
+    tempo = percurso(tempo)
+    sobrevivente = input() #até sair um sobrevivente que exista
+    while sobrevivente not in lista_sobreviventes:
+        sobrevivente = input()
+    movimentos = input().split(", ")
+    for movimento in movimentos: #para cada movimento em movimentos
+        novo_local = nova_posicao(movimento)
+        if novo_local == True: #se for um local válido
+            tempo_ganho += estruturas(tempo)
+        else: #se não for válido
+            print("❌ Travou na parede! Deixou fácil pro killer!")
+            ganchos += 1
+    ganchos += 1
+    tempo += adicao_tempo
+    print(f"Fim da Chase! O/A {sobrevivente} ganhou {tempo_ganho} segundos.")
+    print(f"O {assassino} alcançou o/a {sobrevivente} e colocou-o no gancho.")
+
 
 print("DBCin x DBIp, que a melhor equipe vença! 🏆")
 
@@ -78,19 +100,14 @@ distancia = abs(coordenada_inicial[0] - coordenada_assassino[0]) + abs(coordenad
 print(f"O(A) {assassino} nasceu na posição [{coordenada_assassino[0]}, {coordenada_assassino[1]}].")
 print(f"A vossa vantagem inicial de distância é de {distancia} espaços!")
 
-lista_sobreviventes = ["Kate", "Dwight", "Ada", "Vee"]
-sobrevivente = input()
-while sobrevivente not in lista_sobreviventes:
-    sobrevivente = input()
-
 combate_acontecendo = True
+ganchos = 0
+tempo = 0
+lista_sobreviventes = ["Kate", "Dwight", "Ada", "Vee"]
+posicao_sobreviventes = [coordenada_inicial[0], coordenada_inicial[1]]
+vantagem_adicionada = False
+
+#CHASE
 while combate_acontecendo == True:
-    lista_sobreviventes = ["Kate", "Dwight", "Ada", "Vee"]
-    posicoes_sobreviventes = [coordenada_inicial, coordenada_inicial, coordenada_inicial, coordenada_inicial]
-    sobrevivente = input()
-    while sobrevivente not in lista_sobreviventes:
-        sobrevivente = input()
-    quem_anda = lista_sobreviventes.index(sobrevivente) #para saber quem vai fazer a movimentação e onde eu mexo na lista das posições
-    movimento = input().split()
-    pessoa_viva = nova_posicao(quem_anda)
-    if pessoa_viva == False: #se ele tentar sair da matriz o assassino pega ele
+    percurso()
+
