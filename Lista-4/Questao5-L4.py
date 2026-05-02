@@ -13,7 +13,7 @@ def nova_posicao(movimento): #determina a nova posição da pessoa
         posicao_sobreviventes[0] += 1
     return (0 <= posicao_sobreviventes[0] < 9 and 0 <= posicao_sobreviventes[1] < 9)
 
-def estruturas(): #avalia as estruturas percorridas e atualiza o tempo
+def estruturas(tempo_ganho): #avalia as estruturas percorridas e atualiza o tempo
     linha = posicao_sobreviventes[0]
     coluna  = posicao_sobreviventes[1]
     if matriz[linha][coluna] == "M":
@@ -34,27 +34,46 @@ def estruturas(): #avalia as estruturas percorridas e atualiza o tempo
 
 
 def percurso(tempo, ganchos): #faz o percurso (botar todas as funções aqui dentro)
-    quant_geradores = calcular_geradores(tempo)
-    print(f"--- STATUS: {quant_geradores}/5 Geradores | {ganchos}/12 Ganchos ---")
-    if vantagem_adicionada == False: #tempo da vantagem
-        adicao_tempo += (60 + distancia * 10)
-        vantagem_adicionada = True
-    tempo = percurso(tempo)
-    sobrevivente = input() #até sair um sobrevivente que exista
-    while sobrevivente not in lista_sobreviventes:
-        sobrevivente = input()
-    movimentos = input().split(", ")
-    for movimento in movimentos: #para cada movimento em movimentos
-        novo_local = nova_posicao(movimento)
-        if novo_local == True: #se for um local válido
-            tempo_ganho += estruturas(tempo)
-        else: #se não for válido
-            print("❌ Travou na parede! Deixou fácil pro killer!")
-            ganchos += 1
-    ganchos += 1
-    tempo += adicao_tempo
-    print(f"Fim da Chase! O/A {sobrevivente} ganhou {tempo_ganho} segundos.")
-    print(f"O {assassino} alcançou o/a {sobrevivente} e colocou-o no gancho.")
+    vantagem_adicionada = False
+    combate_acontecendo = True
+    while combate_acontecendo == True:
+        tempo_ganho = 0
+        quant_geradores = calcular_geradores(tempo)
+        print(f"--- STATUS: {quant_geradores}/5 Geradores | {ganchos}/12 Ganchos ---")
+        if vantagem_adicionada == False: #tempo da vantagem
+            tempo += (60 + distancia * 10)
+            vantagem_adicionada = True
+        sobrevivente = "" #até sair um sobrevivente que exista
+        while sobrevivente not in lista_sobreviventes:
+            sobrevivente = input()
+        indice_sobrevivente = lista_sobreviventes.index(sobrevivente)
+        movimentos = input().split(", ")
+        for movimento in movimentos: #para cada movimento em movimentos
+            novo_local = nova_posicao(movimento)
+            if novo_local == True: #se for um local válido
+                tempo_ganho = estruturas(tempo_ganho)
+            else: #se não for válido
+                print("❌ Travou na parede! Deixou fácil pro killer!")
+        ganchos += 1
+        ganchos_sobreviventes[indice_sobrevivente] -= 1
+        if ganchos_sobreviventes[indice_sobrevivente] < 1:
+            lista_sobreviventes.remove(sobrevivente)
+            ganchos_sobreviventes.pop(indice_sobrevivente)
+        tempo += tempo_ganho
+        print(f"Fim da Chase! O/A {sobrevivente} ganhou {tempo_ganho} segundos.")
+        print(f"O {assassino} alcançou o/a {sobrevivente} e colocou-o no gancho.")
+        quant_geradores = calcular_geradores(tempo)
+        if quant_geradores >= 5:
+            combate_acontecendo = False
+            print()
+            print("=============================================")
+            print("🎉 VITÓRIA DA EQUIPE! Fizeram os 5 geradores antes de um de vcs morrer!")
+        elif ganchos >= 8:
+            combate_acontecendo = False
+            print()
+            print("=============================================")
+            print(f"💀 DERROTA! O assassino conseguiu {ganchos} ganchos antes dos geradores terminarem!")
+
 
 
 print("DBCin x DBIp, que a melhor equipe vença! 🏆")
@@ -89,8 +108,7 @@ else:
     matriz[7][1] = "LT" #LT
 
 coordenada_inicial = input().split(",")
-for termo in coordenada_inicial:
-    termo = int(termo)
+coordenada_inicial = [int(termo) for termo in coordenada_inicial]
 coordenada_assassino = [0,0] #definindo a coordenada do assassino e a distância
 if abs(coordenada_inicial[0] - 8) > coordenada_inicial[0]:
     coordenada_assassino[0] = 8
@@ -100,14 +118,13 @@ distancia = abs(coordenada_inicial[0] - coordenada_assassino[0]) + abs(coordenad
 print(f"O(A) {assassino} nasceu na posição [{coordenada_assassino[0]}, {coordenada_assassino[1]}].")
 print(f"A vossa vantagem inicial de distância é de {distancia} espaços!")
 
-combate_acontecendo = True
+
 ganchos = 0
 tempo = 0
 lista_sobreviventes = ["Kate", "Dwight", "Ada", "Vee"]
+ganchos_sobreviventes = [2, 2, 2, 2]
 posicao_sobreviventes = [coordenada_inicial[0], coordenada_inicial[1]]
-vantagem_adicionada = False
 
 #CHASE
-while combate_acontecendo == True:
-    percurso()
+percurso(tempo, ganchos)
 
