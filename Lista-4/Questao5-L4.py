@@ -4,13 +4,13 @@ def calcular_geradores(tempo): #calcular a quantidade de geradores
 
 def nova_posicao(movimento): #determina a nova posição da pessoa
     if movimento == "c" or movimento == "d1" or movimento == "d2":
-        posicao_sobreviventes[1] -= 1
-    elif movimento == "b" or movimento == "d3" or movimento == "d4":
-        posicao_sobreviventes[1] += 1
-    if movimento == "e" or movimento == "d1" or movimento == "d3":
         posicao_sobreviventes[0] -= 1
-    elif movimento == "d" or movimento == "d2" or movimento == "d4":
+    elif movimento == "b" or movimento == "d3" or movimento == "d4":
         posicao_sobreviventes[0] += 1
+    if movimento == "e" or movimento == "d1" or movimento == "d3":
+        posicao_sobreviventes[1] -= 1
+    elif movimento == "d" or movimento == "d2" or movimento == "d4":
+        posicao_sobreviventes[1] += 1
     return (0 <= posicao_sobreviventes[0] < 9 and 0 <= posicao_sobreviventes[1] < 9)
 
 def estruturas(tempo_ganho): #avalia as estruturas percorridas e atualiza o tempo
@@ -46,6 +46,15 @@ def percurso(tempo, ganchos): #faz o percurso (botar todas as funções aqui den
         sobrevivente = "" #até sair um sobrevivente que exista
         while sobrevivente not in lista_sobreviventes:
             sobrevivente = input()
+            if sobrevivente not in lista_sobreviventes:
+                if sobrevivente == "Kate" or sobrevivente == "Dwight" or sobrevivente == "Ada" or sobrevivente == "Vee":
+                    print(f"⚠️ O/A {sobrevivente} já tem 2 ganchos!")
+                    print("Esse personagem não está previsto na sua equipe ou já tem 2 ganchos.")
+                    print(f"--- STATUS: {quant_geradores}/5 Geradores | {ganchos}/12 Ganchos ---")
+                else:
+                    print("⚠️ Personagem não pertence à equipe!")
+                    print("Esse personagem não está previsto na sua equipe ou já tem 2 ganchos.")
+                    print(f"--- STATUS: {quant_geradores}/5 Geradores | {ganchos}/12 Ganchos ---")
         indice_sobrevivente = lista_sobreviventes.index(sobrevivente)
         movimentos = input().split(", ")
         for movimento in movimentos: #para cada movimento em movimentos
