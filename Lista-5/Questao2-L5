@@ -1,0 +1,8 @@
+def biblioteca_fera(quant_livros):
+    if quant_livros == 1:
+        return 1
+    return (2 * biblioteca_fera(quant_livros - 1)) + 1
+
+quant_livros = int(input())
+movimentos = biblioteca_fera(quant_livros)
+print(f"Bela moveu os {quant_livros} livros em {movimentos} movimentos para o Pedestal de Marfim.")

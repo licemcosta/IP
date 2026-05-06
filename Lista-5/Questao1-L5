@@ -1,0 +1,21 @@
+def macas(dia_colheita):
+    if dia_colheita == 0:
+        return 0
+    if dia_colheita == 1:
+        return 1
+    ontem = macas(dia_colheita - 1)
+    antes_de_ontem = macas(dia_colheita - 2)
+    coleta_atual = ontem + antes_de_ontem
+    return coleta_atual
+
+dia_colheita = int(input())
+quant_macas = macas(dia_colheita)
+
+print("Espelho, espelho meu, quantas maçãs a árvore deu?")
+print(f"A árvore rendeu {quant_macas} maçãs no dia {dia_colheita}.")
+if quant_macas < 7:
+    print("Oh não! A colheita não foi suficiente para os sete anões.")
+elif quant_macas >= 7:
+    print(f"Cada anão receberá {quant_macas // 7} maçã(s) e Branca de Neve ficará com a sobra de {quant_macas % 7} maçã(s).")
+    if quant_macas % 7 == 0:
+        print("A divisão foi perfeita! Nenhuma maçã sobrou para a torta da Branca de Neve.")

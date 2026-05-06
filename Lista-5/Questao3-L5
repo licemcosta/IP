@@ -1,0 +1,30 @@
+def resgate(lista_ariel, resistencia, local_atual, bugingangas):
+
+    if resistencia <= 0: #caso de parada 1
+        print("A correnteza está muito forte... não consigo continuar.")
+        return False, bugingangas
+    if local_atual == len(lista_ariel): #caso de parada 2
+        return True, bugingangas 
+    
+    resistencia -= 1
+    if lista_ariel[local_atual] == "Linguado":
+        print("Obrigada, Linguado! Vamos rápido!")
+        resistencia += 2
+    elif lista_ariel[local_atual] == "Polvo":
+        print("Cuidado com os servos da bruxa!")
+        resistencia -= 2
+    elif lista_ariel[local_atual] == "~":
+        resistencia = resistencia
+    else:
+        bugingangas += int(lista_ariel[local_atual])
+    return resgate(lista_ariel, resistencia, local_atual + 1, bugingangas)
+    
+
+
+lista_ariel = input().split()
+resgate_sucedido, bugingangas = resgate(lista_ariel, 6, 0, 0)
+
+if resgate_sucedido == False:
+    print("O príncipe afundou... Úrsula venceu desta vez.")
+else:
+    print(f"Eric foi salvo! E Ariel ainda guardou {bugingangas} bugigangas na sua gruta.")
