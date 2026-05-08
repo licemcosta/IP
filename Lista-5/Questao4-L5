@@ -1,0 +1,51 @@
+def labirinto(quant_linhas, quant_colunas, posicao_linha, posicao_coluna, espinhos, visitas):
+    if quant_colunas <= posicao_coluna or posicao_coluna < 0 or quant_linhas <= posicao_linha or posicao_linha < 0:
+        return(0)
+    if espinhos == 2 and matriz[posicao_linha][posicao_coluna] == ",":
+        return (0)
+    if matriz[posicao_linha][posicao_coluna] == "S":
+        return (1) 
+    if matriz[posicao_linha][posicao_coluna] == "|":
+        return(0)
+    if visitas[posicao_linha][posicao_coluna] == True:
+        return(0)
+    visitas[posicao_linha][posicao_coluna] = True
+    if matriz[posicao_linha][posicao_coluna] == ",":
+        espinhos += 1
+    caminhos_possiveis = 0
+    caminhos_possiveis += labirinto(quant_linhas, quant_colunas, posicao_linha + 1, posicao_coluna, espinhos, visitas) #baixo
+    caminhos_possiveis += labirinto(quant_linhas, quant_colunas, posicao_linha - 1, posicao_coluna, espinhos, visitas) #cima
+    caminhos_possiveis += labirinto(quant_linhas, quant_colunas, posicao_linha, posicao_coluna + 1, espinhos, visitas) #direita
+    caminhos_possiveis += labirinto(quant_linhas, quant_colunas, posicao_linha, posicao_coluna - 1, espinhos, visitas) #esquerda
+    visitas[posicao_linha][posicao_coluna] = False
+    return caminhos_possiveis
+
+
+
+quant_linhas = int(input())
+quant_colunas = int(input())
+matriz = [] #construção da matriz labirinto
+for i in range(quant_linhas):
+    linha = input()
+    linha = [termo for termo in linha]
+    matriz.append(linha)
+
+visitas = [] #construção da matriz para saber se já visitou ou não
+for i in range(quant_linhas):
+    linha = []
+    for j in range(quant_colunas):
+        linha.append(False)
+        if matriz[i][j] == "J":
+            posicao_linha = i
+            posicao_coluna = j
+    visitas.append(linha)
+
+
+caminhos_possiveis = labirinto(quant_linhas, quant_colunas, posicao_linha, posicao_coluna, 0, visitas)
+print(f"Existem {caminhos_possiveis} maneira(s) de sair do labirinto!")
+if caminhos_possiveis == 0:
+    print("Pelo visto Jafar conseguiu tudo que ele sempre quis, Jasmine ficara calada para sempre, ouvi dizer que ele vai espandir o reino até Ababwa")
+elif caminhos_possiveis == 1:
+    print("Ufa! Jasmine consegue escapar, mas agora precisam tirar Jafar do poder, é melhor pedirem ajuda ao gênio!")
+else:
+    print("Ninguém me cala! Jasmine derruba Jafar sozinha sem a ajuda de ninguém.")

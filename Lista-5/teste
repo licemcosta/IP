@@ -1,0 +1,14 @@
+def primo(numero, termo): #ETAPA 5
+    if numero == 0 or numero == 1:
+        return False
+    if termo == numero:
+        return True
+    if numero % termo == 0:
+        return False
+    return primo(numero, termo + 1)
+
+numero = int(input())
+termo = 2
+
+resultado = primo(numero, termo)
+print(resultado)

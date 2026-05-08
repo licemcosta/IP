@@ -1,0 +1,68 @@
+erros_totais = 0
+
+def labirinto(palavra_magica, quantidade_erros, linha, coluna, visitas, erros_totais): #função do labirinto
+    if tamanho_matriz <= coluna or coluna < 0 or tamanho_matriz <= linha or linha < 0: #se a posição não existir
+        return (0)
+    if erros_totais > quantidade_erros: #se tiver mais erros que o permitido
+        return (0)
+    if matriz[linha][coluna] == "2": #se encontrou um caminho
+        return (1)
+    if visitas[linha][coluna] == True: #se já passou por um espaço
+        return (0)
+    if matriz[linha][coluna] == "0":
+        return (0)
+    
+    if matriz[linha][coluna] not in palavra_magica: #se eu passar por uma letra que tá na palavra
+        erros_totais += 1
+
+    visitas[linha][coluna] = True
+    caminho_possivel = 0
+    caminho_possivel += labirinto(palavra_magica, quantidade_erros, linha + 1, coluna, visitas, erros_totais) #baixo
+    if caminho_possivel > 0:
+        return(1)
+    caminho_possivel += labirinto(palavra_magica, quantidade_erros, linha - 1, coluna, visitas, erros_totais) #cima
+    if caminho_possivel > 0:
+        return(1)
+    caminho_possivel += labirinto(palavra_magica, quantidade_erros, linha, coluna + 1, visitas, erros_totais) #direita
+    if caminho_possivel > 0:
+        return(1)
+    caminho_possivel += labirinto(palavra_magica, quantidade_erros, linha, coluna - 1, visitas, erros_totais) #esquerda
+    if caminho_possivel > 0:
+        return(1)
+    visitas[linha][coluna] = False
+    return caminho_possivel
+
+#Começo do código
+print("Eu te amo tanto agora quanto da primeira vez em que eu vi você...")
+
+tamanho_matriz = int(input()) #quantidade de linhas e colunas
+print("O mapa da floresta me parece esquisito, certo Pascal?")
+palavra_magica = input() #palavra secreta que tem que formar
+print("Minha querida Rapunzel, a palavra-chave é?")
+
+coordenada_jose = input().split() #coordenada do jose
+linha_jose = int(coordenada_jose[0])
+coluna_jose = int(coordenada_jose[1])
+print("Vamos por aqui, esse deve ser o local certo para se descer!")
+
+visitas = [] #construção da matriz para saber se já visitou ou não
+for i in range(tamanho_matriz):
+    linha = []
+    for j in range(tamanho_matriz):
+        linha.append(False)
+    visitas.append(linha)
+
+matriz = []
+for i in range(tamanho_matriz): #criando o labirinto
+    linha = input().split()
+    matriz.append(linha)
+print("Segundo o mapa essas são as informações da floresta:")
+
+quantidade_erros = int(input()) #quantidade de vezes que ele pode pisar em letras erradas
+print("Eu não tenho todo o tempo do mundo!")
+
+caminho_possivel = labirinto(palavra_magica, quantidade_erros, linha_jose, coluna_jose, visitas, erros_totais)
+if caminho_possivel > 0: #se existir um caminho que passe pelas letras
+    print("A CAÇADA TERMINOU! O SOL BRILHA NO HORIZONTE E O PIQUE-NIQUE REAL ESTÁ SERVIDO! JOSÉ FINALMENTE PODE DESCANSAR ENQUANTO PASCAL VIGIA A TORTA DE MAÇÃ.")
+else:
+    print("O SOL SE PÔS NO REINO DE CORONA E AS ÚLTIMAS LANTERNAS SE APAGARAM. JOSÉ BEZERRA VAGOU POR HORAS, MAS O DESTINO FOI CRUEL: ELE NÃO CHEGOU AO PIQUE-NIQUE. ENQUANTO O CAVALO MAXIMUS SE DELICIA COM A ÚLTIMA FATIA DE TORTA DE MAÇÃ, JOSÉ TERÁ QUE SE CONTENTAR EM DIVIDIR UMA FRUTA SILVESTRE AZEDA COM O PASCAL. A CAÇADA FOI UM FRACASSO E A FOME VENCEU DESTA VEZ.")

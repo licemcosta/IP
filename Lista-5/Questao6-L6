@@ -1,0 +1,31 @@
+def for_recursivo(indice, limite): #Meu amado for in range modo recursão
+    if indice >= limite:
+        return
+    #aqui entra todo o código que eu quero rodar no for
+    for_recursivo(indice + 1, limite)
+
+
+def fatorial(numero): #ETAPA 1
+    if numero == 1:
+        return (1)
+    return (numero * fatorial(numero - 1))
+
+def soma_digitos(numero): #ETAPA 2 E 3
+    numero_string = f"{numero:03d}"
+    soma = int(numero_string[0]) + int(numero_string[1]) + int(numero_string[2])
+    return soma
+
+def fibonacci_alternativo(numero): #ETAPA 4
+    
+
+def primo(numero, termo): #ETAPA 5 - Retorna verdadeiro ou falso
+    if numero == 0 or numero == 1:
+        return False
+    if termo == numero:
+        return True
+    if numero % termo == 0:
+        return False
+    return primo(numero, termo + 1)
+
+lista_numeros = input().split(", ")
+termo = 2
