@@ -6,26 +6,69 @@ def for_recursivo(indice, limite): #Meu amado for in range modo recursão
 
 
 def fatorial(numero): #ETAPA 1
-    if numero == 1:
+    if numero <= 1:
         return (1)
-    return (numero * fatorial(numero - 1))
+    if numero % 2 == 0:  #se for par 
+        return fatorial(numero//2) * numero
+    else: #se for 
+        return fatorial(numero - 1) + numero
 
 def soma_digitos(numero): #ETAPA 2 E 3
     numero_string = f"{numero:03d}"
     soma = int(numero_string[0]) + int(numero_string[1]) + int(numero_string[2])
+    if soma <= 1:
+        return (2)
     return soma
 
-def fibonacci_alternativo(numero): #ETAPA 4
-    
+def fibonacci_alternativo(indice_pressagio, memoria_passado): #ETAPA 4
+    if indice_pressagio == 0: #se for igual a zero, retorna 0
+        return 0
+    elif 1 <= indice_pressagio < memoria_passado: #se o índice for menor que a memória, retorna 1
+        return 1
+    else: #se o índice for maior que a memória, ocorre a soma
+        return for_fibonacci(indice_pressagio, memoria_passado, 1) % 500
 
-def primo(numero, termo): #ETAPA 5 - Retorna verdadeiro ou falso
-    if numero == 0 or numero == 1:
+def for_fibonacci(indice_pressagio, memoria_passado, indice):
+    if indice > memoria_passado: #índice é a quantidade de termos somados e memoria é a quantidade de termos que tem que somar
+        return 0
+    return (fibonacci_alternativo(indice_pressagio - indice, memoria_passado)) + for_fibonacci(indice_pressagio, memoria_passado, indice + 1) #termo atual + soma dos anteriores
+
+def primo(numero, termo):#ETAPA 5 - Retorna verdadeiro ou falso
+    if numero <= 1:
         return False
-    if termo == numero:
+    if termo * termo > numero:
         return True
     if numero % termo == 0:
         return False
     return primo(numero, termo + 1)
 
-lista_numeros = input().split(", ")
-termo = 2
+def for_principal(indice, limite, lista_numeros):
+    if indice >= limite:
+        return
+    lista_numeros[indice] = int(lista_numeros[indice])
+    sinal_antigo = int(fatorial(lista_numeros[indice])) % 500
+    indice_pressagio = soma_digitos(sinal_antigo) % 500
+    memoria_passado = soma_digitos(indice_pressagio) % 500
+    eco_das_luzes = fibonacci_alternativo(indice_pressagio, memoria_passado) % 500
+    numero_pressagio = int(sinal_antigo + eco_das_luzes)
+    significado_pressagio = primo(numero_pressagio, 2)
+    if significado_pressagio == True:
+        significado_pressagio = "SEGURO"
+    else:
+        significado_pressagio = "PERIGOSO"
+    numero_3d = f"{lista_numeros[indice]:03d}"
+    sinal_3d = f"{sinal_antigo:03d}"
+    indice_3d = f"{indice_pressagio:03d}"
+    memoria_3d = f"{memoria_passado:03d}"
+    eco_3d = f"{eco_das_luzes:03d}"
+    print(f"Numero {numero_3d} | Sinal = {sinal_3d} | Indice = {indice_3d} | Memorias = {memoria_3d} | Eco das Luzes = {eco_3d} | Julgamento: {significado_pressagio}")
+    for_principal(indice + 1, limite, lista_numeros)
+
+numeros = input()
+numeros = numeros[1:-1]
+lista_numeros = []
+lista_numeros = numeros.split(", ")
+soma = 0
+
+for_principal(0, len(lista_numeros), lista_numeros)
+    

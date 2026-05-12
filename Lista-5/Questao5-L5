@@ -1,0 +1,67 @@
+def corrida(velocidade, glitches, pista, numero_pistas, menor_tempo, tempo):
+    if pista >= numero_pistas:
+        if tempo < menor_tempo:
+            menor_tempo = tempo
+        return menor_tempo
+    else: 
+        pista_atual = dados_pista[pista][0]
+        tamanho_pista = float(dados_pista[pista][1])
+        parametro_1 = float(dados_pista[pista][2])
+        parametro_2 = float(dados_pista[pista][3])
+
+        for acao in lista_acoes:
+            velocidade_entrada = velocidade + acao
+            dano = False
+            if velocidade_entrada <= 0:
+                dano = True
+            else:
+                tempo_atual = tamanho_pista/velocidade_entrada
+                if pista_atual == "Reta":
+                    velocidade_saida = velocidade_entrada
+                if pista_atual == "Curva":
+                    if parametro_1 < velocidade_entrada:
+                        dano = True
+                    else:
+                        velocidade_saida = velocidade_entrada
+                if pista_atual == "Subida":
+                    velocidade_saida = velocidade_entrada - parametro_1
+                    if velocidade_saida <= 0:
+                        dano = True
+                if pista_atual == "Descida":
+                    velocidade_saida = velocidade_entrada + parametro_1
+                    if velocidade_saida > parametro_2:
+                        dano = True
+        
+            if dano == True:
+                if glitches > 0:
+                    tempo_resultante = corrida(10, glitches - 1, pista + 1, numero_pistas, menor_tempo, tempo)
+                    if tempo_resultante < menor_tempo:
+                        menor_tempo = tempo_resultante
+            else:
+                tempo_resultante = corrida(velocidade_saida, glitches, pista + 1, numero_pistas, menor_tempo, tempo + tempo_atual)
+                if tempo_resultante < menor_tempo:
+                    menor_tempo = tempo_resultante
+
+    return menor_tempo 
+                
+dados_iniciais = input().split()
+print('Calibrando a gravidade e o atrito da pista...')
+print()
+numero_pistas = int(dados_iniciais[0])
+velocidade_inicial = int(dados_iniciais[1])
+glitches = int(dados_iniciais[2])
+lista_acoes = [10, 0, -10]
+dados_pista = []
+lista_tempos = []
+menor_tempo = float("inf")
+
+for i in range(numero_pistas): #matriz com informações da pista
+    trecho = input().split()
+    dados_pista.append(trecho)
+
+resultado = corrida(velocidade_inicial, glitches, 0, numero_pistas, menor_tempo, 0)
+
+if resultado == float("inf"):
+    print("Bug fatal! Vanellope capotou e o kart virou pixels.")
+else:
+    print(f"A corrida foi um sucesso! Tempo minimo cravado: {resultado:.2f}s.")
