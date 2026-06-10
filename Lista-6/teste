@@ -1,0 +1,60 @@
+selecoes = {}
+print("Bem, amigos da rede! Sistema de Estatísticas VAR Edition no ar. Aguardando comandos...")
+
+comando_atual = input().split()
+while comando_atual[0] != "*FIM":
+    if comando_atual[0] == "*ADD": #adicionar jogador
+        selecao_atual = comando_atual[2]
+        jogador_atual = comando_atual[1]
+        dados_jogador = (selecao_atual, int(comando_atual[3]), int(comando_atual[4]), int(comando_atual[5]), int(comando_atual[6]), int(comando_atual[7]))
+        if selecao_atual not in selecoes:
+            selecoes[selecao_atual] = {}
+        if comando_atual[1] not in selecoes[selecao_atual]: #se não tiver o jogador na seleção
+            selecoes[selecao_atual][comando_atual[1]] = dados_jogador
+        else: #se já tiver o jogador na seleção
+            for i in selecoes[selecao_atual]:
+                if selecoes[selecao_atual][i] == selecoes[selecao_atual][comando_atual[1]]:
+                    gols = selecoes[selecao_atual][i][1]
+                    assist = selecoes[selecao_atual][i][2]
+                    passes_certos = selecoes[selecao_atual][i][3]
+                    cart_amarelos = selecoes[selecao_atual][i][4]
+                    cart_vermelhos = selecoes[selecao_atual][i][5]
+                    selecoes[selecao_atual][comando_atual[1]] = (selecao_atual, gols + int(comando_atual[3]), assist + int(comando_atual[4]), passes_certos + int(comando_atual[5]), cart_amarelos + int(comando_atual[6]), cart_vermelhos + int(comando_atual[7]))
+
+    if comando_atual[0] == "*DEL": #remover jogador
+        jogador = False
+        comando_atual.pop(0)
+        while jogador == False:
+            selecao_atual = comando_atual[1]
+            jogador_atual = comando_atual[0]
+            if jogador_atual in selecoes[selecao_atual]:   
+                del selecoes[selecao_atual][jogador_atual]
+                print(f"O jogador: {jogador_atual} da seleção: {selecao_atual} foi retirado do sistema")
+                jogador = True
+            else:
+                print(f"O jogador: {jogador_atual} da seleção: {selecao_atual} não foi encontrado insira uma outra combinação de jogador e seleção:")
+                comando_atual = input()
+
+    if comando_atual[0] == "*BUSCAR": #buscar algum jogador
+        selecao_atual = comando_atual[2]
+        jogador_atual = comando_atual[1]  
+        if jogador_atual not in selecoes[selecao_atual]:
+            if jogador_atual == "Neymar":
+                print("E o pessoal tá lá: 'será que Carlo Ancelotti vai convocar o Neymar?")
+            else:    
+                print(f"Jogador não encontrado na seleção {selecao_atual}")
+        else:
+            gols = selecoes[selecao_atual][jogador_atual][1]
+            assist = selecoes[selecao_atual][jogador_atual][2]
+            passes_certos = selecoes[selecao_atual][jogador_atual][3]
+            cart_amarelos = selecoes[selecao_atual][jogador_atual][4]
+            cart_vermelhos = selecoes[selecao_atual][jogador_atual][5]
+            print(f"{jogador_atual} ({selecao_atual}): {gols}G, {assist}A, {passes_certos}P, {cart_amarelos}CA, {cart_vermelhos}CV")
+    if comando_atual[0] == "*DESTAQUE_SELECAO": #melhor jogador de um país
+        selecao_atual = comando_atual[1]
+        if selecao_atual not in selecoes:
+            print(f"Nenhum dado encontrado para a seleção {selecao_atual}")
+        else:
+            ranking = sorted(selecoes[selecao_atual].items(), key=lambda x: (-x[1][1], -x[1][2], x[1][5], x[1][4], -x[1][3], x[0])) #desempate: gols, assist, menos cart vermelho, menos carts amarelos, mais passes certos, nome do jogador
+            print(f"Destaque da {selecao_atual}: {ranking[0][0]} {ranking[0][1][1]} gols, {ranking[0][1][2]} assistências")
+    comando_atual = input().split()

@@ -1,0 +1,49 @@
+nome_fases = ("fase de grupos", "oitavas", "quartas", "semifinal", "final")
+fases = {}
+pont_grupos = 0
+pont_oitavas = 0
+pont_quartas = 0
+pont_semi = 0
+pont_final = 0
+
+numero_selecoes = int(input())
+
+for i in range(numero_selecoes): #vai adicionar cada seleção e os pontos nos dicionários de suas fases
+    nome_selecao = input()
+    dado_atual = ""
+    posicao = 0
+    dado_atual = input()
+    while dado_atual != "*":
+        dado_atual = dado_atual.rsplit(" ", 1)
+        if fases.get(dado_atual[0], False) == False:
+            fases[dado_atual[0]] = {}
+        fases[dado_atual[0]][nome_selecao] = dado_atual[1]
+        if dado_atual[0] == "fase de grupos":
+            pont_grupos += int(dado_atual[1])
+        elif dado_atual[0] == "oitavas":
+            pont_oitavas += int(dado_atual[1])
+        elif dado_atual[0] == "quartas":
+            pont_quartas += int(dado_atual[1])
+        elif dado_atual[0] == "semifinal":
+            pont_semi += int(dado_atual[1])
+        else:
+            pont_final += int(dado_atual[1])
+        dado_atual = input()
+
+if pont_grupos >= pont_oitavas and pont_grupos >= pont_quartas and pont_grupos >= pont_semi and pont_grupos >= pont_final:
+    print("fase de grupos")
+elif pont_oitavas >= pont_quartas and pont_oitavas >= pont_semi and pont_oitavas >= pont_final:
+    print("oitavas")
+elif pont_quartas >= pont_semi and pont_quartas >= pont_final:
+    print("quartas")
+elif pont_semi >= pont_final:
+    print("semifinal")
+else:
+    print("final")
+
+for fase in nome_fases:
+    if fase in fases:
+        print(f"\n{fase}")
+        for seleçao in fases[fase]:
+            pontuaçao_seleçao = fases[fase][seleçao]
+            print(f"{seleçao} - {pontuaçao_seleçao}")

@@ -1,0 +1,33 @@
+ranking = ("França", "Espanha", "Argentina", "Inglaterra", "Portugal", "Brasil", "Holanda", "Marrocos", "Bélgica", "Alemanha", "Croácia", "Colômbia", "Senegal", "México", "Estados Unidos", "Uruguai", "Japão", "Suíça", "Irã", "Turquia", "Equador", "Áustria", "Coreia Do Sul", "Australia", "Argélia", "Egito", "Canadá", "Noruega", "Panamá", "Costa Do Marfim", "Suécia", "Paraguai", "Tchéquia", "Escócia", "Tunísia", "Républica Democrática Do Congo", "Uzbequistão", "Catar", "Iraque", "Africa Do Sul", "Arábia Saudita", "Jordânia", "Bósnia-Herzgovina", "Cabo Verde", "Gana", "Curaçao", "Haiti", "Nova Zelândia")
+jogadores = {}
+
+jogador = input()
+while jogador != "FIM":
+    if jogador not in jogadores:
+        jogadores[jogador] = 1
+    else:
+        jogadores[jogador] += 1
+    jogador = input()
+
+print("Somente o melhor deve ser lembrado")
+for i in range(3):
+    maior_jogador = ""
+    for jogador in jogadores:
+        if maior_jogador == "" or jogadores[jogador] > jogadores[maior_jogador]: #se for menor ou não tiver
+            maior_jogador = jogador
+        elif jogadores[jogador] == jogadores[maior_jogador]: #se os gols forem iguais
+            seleçao_jogador = jogador.split(" - ")[1]
+            seleçao_maior_jogador = maior_jogador.split(" - ")[1]
+            if ranking.index(seleçao_jogador) < ranking.index(seleçao_maior_jogador):
+                maior_jogador = jogador
+            elif ranking.index(seleçao_jogador) == ranking.index(seleçao_maior_jogador):
+                if jogador[0] < maior_jogador[0]:
+                    maior_jogador = jogador
+    nome_jogador = maior_jogador.split(" - ")[0]
+    if i == 0:
+        print(f"O artilheiro foi {nome_jogador} com {jogadores[maior_jogador]} gols")
+    elif i == 1:
+        print(f"Eu poderia falar do {nome_jogador} mas ele é somente o primeiro a ser esquecido")
+    else:
+        print(f"O {nome_jogador} então, nem pensar")
+    jogadores[maior_jogador] = -1

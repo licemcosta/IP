@@ -1,0 +1,8 @@
+Brasil = {"pontos":{0}, "vitorias":{0}, "derrotas":{0}, "empates":{0}, "saldo":{0}}
+Escocia = {"pontos":{0}, "vitorias":{0}, "derrotas":{0}, "empates":{0}, "saldo":{0}}
+Haiti = {"pontos":{0}, "vitorias":{0}, "derrotas":{0}, "empates":{0}, "saldo":{0}}
+Marrocos = {"pontos":{0}, "vitorias":{0}, "derrotas":{0}, "empates":{0}, "saldo":{0}}
+for i in range(6):
+    jogo_atual = input()
+    jogo_atual = tuple((jogo_atual.replace(" x "," ")).split())
+    

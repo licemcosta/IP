@@ -1,0 +1,22 @@
+quantidade_operaçoes = int(input())
+dicionario = {"ES":{}, "EN":{}}
+
+for i in range(quantidade_operaçoes):
+    frase = input().split()
+    idioma = frase[1]
+    if frase[0] == "1":
+        dicionario[idioma][frase[3]] = frase[2]
+    else:
+        frase_traduzida = []
+        palavras = frase[2:]
+        traducao = True
+        for palavra in palavras:
+            if traducao == True:
+                if palavra in dicionario[idioma]:
+                    palavra_nova = dicionario[idioma][palavra]
+                    frase_traduzida.append(palavra_nova)
+                else:
+                    print(f"Não entendi nada daqui, faltam palavras no meu dicionário de {idioma}!")
+                    traducao = False
+        if traducao == True:
+            print(" ".join(frase_traduzida))

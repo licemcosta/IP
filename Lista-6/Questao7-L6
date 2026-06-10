@@ -1,0 +1,73 @@
+jogadores = {}
+vagas = int(input())
+
+print("Conexão CBF e CIn-UFPE estabelecida! Processando os dados da convocação rumo ao Hexa...\n")
+if vagas == 0:
+    print("Vixe, zero vagas? Parece que a panela já ta formada e o mister já tem os 26 nomes na cabeça.")
+else:
+    partida_atual = input()
+    while partida_atual == "A coletiva vai começar": #se receber que tem que ver a convocação antes de receber algum nome
+        print("Ue, a coletiva começou mas ninguém foi analisado? O professor vai convocar os gandulas?")
+        partida_atual = input()
+
+    while partida_atual != "A coletiva vai começar":
+        partida_atual = partida_atual.replace("Partida: ", "").split(" - ")
+        pontuacao = int(partida_atual[1]) * 5 + int(partida_atual[2]) * 3 + int(partida_atual[3]) * 1
+        if partida_atual[0] == "Neymar" and partida_atual[0] not in jogadores:
+            pontuacao += 20
+        partida_atual.append(pontuacao)
+        partida_atual = tuple(partida_atual) #ordem = jogador, gols, assist, dribles, lesões, pontuação
+        if int(partida_atual[4]) == 1 and partida_atual[0] != "Neymar":
+            print(f"Ih, {partida_atual[0]} foi pro estaleiro. Ancelotti ta preocupado.")
+        if partida_atual[0] not in jogadores and partida_atual[0] != "Neymar":
+            print(f"Vamos ver o que Ancelotti achará de {partida_atual[0]}.")
+            jogadores[partida_atual[0]] = partida_atual
+        else:
+            if partida_atual[0] not in jogadores:
+                jogadores[partida_atual[0]] = partida_atual
+            if partida_atual[0] != "Neymar":
+                print(f"Mais um jogo pra conta de {partida_atual[0]}.")
+            for i in jogadores:
+                if jogadores[i] == jogadores[partida_atual[0]]:
+                    gols_passados = int(jogadores[i][1])
+                    assist_passadas = int(jogadores[i][2])
+                    dribles = int(jogadores[i][3])
+                    lesoes = int(jogadores[i][4]) + int(partida_atual[4])
+                    pontuacao_nova = int(jogadores[i][5]) + pontuacao
+                    if lesoes > 1:
+                        lesoes = 1
+                    jogadores[partida_atual[0]] = (partida_atual[0], gols_passados + int(partida_atual[1]), assist_passadas + int(partida_atual[2]), dribles + int(partida_atual[3]), lesoes, pontuacao_nova)
+            else:
+                if int(partida_atual[4]) == 0:
+                    print("O homem jogou! A esperanca do hexa respira.")
+                else:
+                    print("Neymar machucou... Mas deixa ele recuperar, na Copa ele decide!")
+        partida_atual = input()
+    
+    for jogador in jogadores: #se tiver lesão tira 10 no final
+        if jogadores[jogador][4] == 1 and jogadores[jogador][0] != "Neymar":
+            jogadores[jogador] = (jogadores[jogador][0], jogadores[jogador][1], jogadores[jogador][2], jogadores[jogador][3], jogadores[jogador][4], jogadores[jogador][5] - 10)
+
+    print()
+    print("--- CONVOCADOS PARA O HEXA ---")
+    colocados = 0 #pessoas que já foram convocadas
+    ney = 0
+    quant_jogadores = len(jogadores)
+    while len(jogadores) > 0 and colocados < vagas:
+        melhor_jogador = ""
+        for jogador in jogadores:
+            if melhor_jogador == "" or jogadores[jogador][5] > jogadores[melhor_jogador][5] or (jogadores[jogador][5] == jogadores[melhor_jogador][5] and int(jogadores[jogador][1]) > int(jogadores[melhor_jogador][1])) or (jogadores[jogador][5] == jogadores[melhor_jogador][5] and int(jogadores[jogador][1]) == int(jogadores[melhor_jogador][1]) and melhor_jogador > jogador):
+                melhor_jogador = jogador
+        print(f"{colocados + 1}. {melhor_jogador} - {jogadores[melhor_jogador][5]} pts (G: {jogadores[melhor_jogador][1]}, A: {jogadores[melhor_jogador][2]})")
+        del jogadores[melhor_jogador]
+        if melhor_jogador == "Neymar":
+            ney += 1
+        colocados += 1
+    if ney == 1:
+        print("Prepara o pagode e a caixa de som, o Ney ta on!")
+        if quant_jogadores < vagas:
+            print("A lista não encheu, mas com o camisa 10 lá dentro, Ancelotti já tá com a cabeça no Hexa.")
+    else:
+        print("Eita... Ancelotti bancou a tática e deixou o menino Ney de fora!")
+        if quant_jogadores < vagas:
+            print("Se liga, professor... ainda tem espaço pra o Ney!")
